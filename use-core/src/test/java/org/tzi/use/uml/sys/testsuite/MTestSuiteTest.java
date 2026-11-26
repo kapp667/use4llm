@@ -63,4 +63,31 @@ class MTestSuiteTest {
 		assertTrue(out.contains("`invalidState'... success"), out);
 		assertTrue(out.contains("`validStateFails'... failure"), out);
 	}
+
+	@Test
+	void derivedValuesOfAnObjectCreatedInsideAVariation() {
+		String model = String.join("\n",
+				"model Repro",
+				"class C",
+				"attributes",
+				"  n : Integer",
+				"  d : Integer derive = self.n * 2",
+				"end");
+		String out = run(model, String.join("\n",
+				"testsuite Repro for model Repro.use",
+				"setup",
+				"  !create c : C",
+				"  !set c.n := 1",
+				"end",
+				"testcase createInVariation",
+				"  beginVariation",
+				"  !create e : C",
+				"  !set e.n := 3",
+				"  assert valid invs C",
+				"  assert valid e.d = 6",
+				"  endVariation",
+				"  assert valid c.d = 2",
+				"end"));
+		assertTrue(out.contains("### OK ###"), out);
+	}
 }
