@@ -1,6 +1,7 @@
 package org.tzi.use.uml.sys.testsuite;
 
 import java.io.PrintWriter;
+import java.util.Collections;
 
 import org.tzi.use.parser.SrcPos;
 import org.tzi.use.uml.ocl.expr.EvalContext;
@@ -18,7 +19,7 @@ public class MAssertGlobalInvariants extends MAssert {
 		return  ctx.postState().check(new PrintWriter(new NullWriter()), 
 									  false, 
 									  false,
-									  true, null);
+									  true, Collections.emptyList());
 	}
 
 }
