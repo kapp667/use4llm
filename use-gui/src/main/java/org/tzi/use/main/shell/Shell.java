@@ -940,7 +940,7 @@ public final class Shell implements Runnable, PPCHandler {
 		int port = 1777;
 		Log.verbose("waiting for connection on port " + port + "...");
 
-		try (ServerSocket socket = new ServerSocket(port)) {
+		try (ServerSocket socket = openNetSocket(port)) {
 			Socket client = socket.accept();
 			InetAddress clientAddr = client.getInetAddress();
 
@@ -951,6 +951,13 @@ public final class Shell implements Runnable, PPCHandler {
 		} catch (IOException ex) {
 			Log.error("Can't bind or listen on port " + port + ".");
 		}
+	}
+
+	/**
+	 * Opens the socket the {@code net} command reads commands from.
+	 */
+	static ServerSocket openNetSocket(int port) throws IOException {
+		return new ServerSocket(port);
 	}
 
 	/**
