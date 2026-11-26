@@ -938,9 +938,9 @@ public final class Shell implements Runnable, PPCHandler {
 	 */
 	private void cmdNet() {
 		int port = 1777;
-		Log.verbose("waiting for connection on port " + port + "...");
 
 		try (ServerSocket socket = openNetSocket(port)) {
+			Log.verbose("waiting for connection on " + socket.getInetAddress().getHostAddress() + ":" + port + "...");
 			Socket client = socket.accept();
 			InetAddress clientAddr = client.getInetAddress();
 
@@ -954,10 +954,11 @@ public final class Shell implements Runnable, PPCHandler {
 	}
 
 	/**
-	 * Opens the socket the {@code net} command reads commands from.
+	 * Opens the socket the {@code net} command reads commands from, on the
+	 * loopback address.
 	 */
 	static ServerSocket openNetSocket(int port) throws IOException {
-		return new ServerSocket(port);
+		return new ServerSocket(port, 0, InetAddress.getLoopbackAddress());
 	}
 
 	/**
