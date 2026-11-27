@@ -560,6 +560,8 @@ public final class Shell implements Runnable, PPCHandler {
 		boolean details = false;
 		boolean all = false;
 		ArrayList<String> invNames = new ArrayList<String>();
+		ArrayList<String> unknownNames = new ArrayList<String>();
+		ArrayList<MClassInvariant> namedInvs = new ArrayList<MClassInvariant>();
 		StringTokenizer tokenizer = new StringTokenizer(line);
 		// skip command
 		tokenizer.nextToken();
@@ -572,12 +574,31 @@ public final class Shell implements Runnable, PPCHandler {
                 default -> {
                     MClassInvariant inv = system().model().getClassInvariant(token);
                     if (inv == null) {
-                        Log.error("Model has no invariant named " + StringUtil.inQuotes(token) + ".");
-                    } else {
-                        invNames.add(token);
+                        unknownNames.add(token);
+                    } else if (!namedInvs.contains(inv)) {
+                        namedInvs.add(inv);
                     }
                 }
             }
+		}
+
+		// An unknown name or an inactive name (without -a) stops the command
+		// before any check runs, so an empty name list never means "all".
+		if (!unknownNames.isEmpty()) {
+			for (String name : unknownNames) {
+				Log.error("Model has no invariant named " + StringUtil.inQuotes(name) + ".");
+			}
+			fLastCheckResult = false;
+			return;
+		}
+		for (MClassInvariant inv : namedInvs) {
+			if (!all && !inv.isActive()) {
+				Log.error("Invariant " + StringUtil.inQuotes(inv.qualifiedName())
+						+ " is deactivated; use check -a to check it.");
+				fLastCheckResult = false;
+				return;
+			}
+			invNames.add(inv.qualifiedName());
 		}
 
 		PrintWriter out = new PrintWriter(USEWriter.getInstance().getOut());

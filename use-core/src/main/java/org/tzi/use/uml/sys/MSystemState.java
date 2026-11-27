@@ -1584,7 +1584,7 @@ public final class MSystemState {
 					new Predicate<MClassInvariant>() {
 						@Override
 						public boolean apply(MClassInvariant input) {
-							return invNames.contains(input.name());
+							return invNames.contains(input.qualifiedName());
 						}
 					});
 		}
