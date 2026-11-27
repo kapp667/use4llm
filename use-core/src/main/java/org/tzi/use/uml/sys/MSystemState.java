@@ -162,6 +162,9 @@ public final class MSystemState {
 	
 	private Object  dirtyLock = new Object();
 	private boolean derivedIsDirty = true;
+
+	/** Number of structure violations reported by the last checkStructure run. */
+	private int fStructureViolations = 0;
 	
 	/**
 	 * Invokes updates on the controller for derived
@@ -901,7 +904,10 @@ public final class MSystemState {
 		boolean isValid = true;
 		
 		for (MLink link : this.fLinkSets.get(assoc).links()) {
-			isValid = validateRedefinesForLink(assoc, link.linkedObjects(), out) && isValid;
+			if (!validateRedefinesForLink(assoc, link.linkedObjects(), out)) {
+				fStructureViolations++;
+				isValid = false;
+			}
 			
 			if (!isValid && !reportAllErrors)
 				return isValid;
@@ -1560,6 +1566,7 @@ public final class MSystemState {
 		if (!checkStructure(out)) {
 			valid = false;
 		}
+		final int structureViolations = fStructureViolations;
 
 		if (Options.EVAL_NUMTHREADS > 1)
 			out.println("checking invariants (using " + Options.EVAL_NUMTHREADS
@@ -1584,7 +1591,7 @@ public final class MSystemState {
 					new Predicate<MClassInvariant>() {
 						@Override
 						public boolean apply(MClassInvariant input) {
-							return invNames.contains(input.name());
+							return invNames.contains(input.qualifiedName());
 						}
 					});
 		}
@@ -1677,7 +1684,10 @@ public final class MSystemState {
 		timeStr = (t / 1000) + "." + StringUtil.leftPad(timeStr, 4, '0');
 		out.println("checked " + numChecked + " invariant"
 				+ ((numChecked == 1) ? "" : "s") + (Options.testMode ? "" : " in " + timeStr) + ", "
-				+ numFailed + " failure" + ((numFailed == 1) ? "" : "s") + '.');
+				+ numFailed + " failure" + ((numFailed == 1) ? "" : "s")
+				+ (structureViolations == 0 ? "" : ", " + structureViolations
+						+ " structure violation" + ((structureViolations == 1) ? "" : "s"))
+				+ '.');
 		out.flush();
 		return valid;
 	}
@@ -1705,6 +1715,7 @@ public final class MSystemState {
 			if (wholePartLink.isReflexive()) {
 				out.println("Error: Object `" + source.name()
 						+ "' cannot be a part of itself.");
+				fStructureViolations++;
 				valid = false;
 			}
 			// ****************************************************************
@@ -1728,6 +1739,7 @@ public final class MSystemState {
 										+ "' is shared by object `" + source.name()
 										+ "' and object `" + tmpSource.name()
 										+ "'.");
+								fStructureViolations++;
 								sharedObjects.add(target);
 								valid = false;
 							}
@@ -1745,6 +1757,7 @@ public final class MSystemState {
 								+ source.name()
 								+ "' is a direct or indirect part of `"
 								+ target.name() + "'.");
+				fStructureViolations++;
 				isCyclic = true;
 				valid = false;
 			}
@@ -1794,6 +1807,7 @@ public final class MSystemState {
 		long start = System.currentTimeMillis();
 		
 		boolean res = true;
+		fStructureViolations = 0;
 		out.println("checking structure...");
 		out.flush();
 		
@@ -1881,6 +1895,7 @@ public final class MSystemState {
 						++count;
 				}
 				if (!selEnd.multiplicity().contains(count)) {
+					fStructureViolations++;
 					out.println("Multiplicity constraint violation in association `"
 									+ assoc.name() + "':");
 					out.println("  Objects `" + StringUtil.fmtSeq(tuple, ", ")
@@ -1984,6 +1999,7 @@ public final class MSystemState {
 			MAssociation assoc, MAssociationEnd aend1, MAssociationEnd aend2,
 			MObject obj, Map.Entry<List<Value>, Set<MObject>> entry) {
 		
+		fStructureViolations++;
 		if (out == NullPrintWriter.getInstance()) return;
 		
 		int n = (entry == null ? 0 : entry.getValue().size());
@@ -2034,6 +2050,7 @@ public final class MSystemState {
 				// Which objects are missing?
 				linkedObjects.removeAll(parentObjectList);
 				
+				fStructureViolations++;
 				out.println("Constraint 'subsets " + subEnd1.association().name() + ":" + subEnd1.nameAsRolename() + "' on association end " + aend.nameAsRolename() + 
 						    ":" + aend.association().name() + " is violated on object " + obj.toString() + ":" + obj.cls().name());
 				

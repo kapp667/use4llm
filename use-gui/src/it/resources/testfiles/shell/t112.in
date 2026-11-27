@@ -17,7 +17,7 @@ check
 *  Object `b1' of class `B' is connected to 0 objects of class `A'
 *  at association end `owner' but the multiplicity is specified as `1'.
 *checking invariants...
-*checked 0 invariants, 0 failures.
+*checked 0 invariants, 0 failures, 4 structure violations.
 !insert (a1,b1) into AB
 ?a1.b->indexOf(b1)
 *-> 1 : Integer

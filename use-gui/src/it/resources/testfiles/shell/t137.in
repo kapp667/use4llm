@@ -1,0 +1,7 @@
+!create o : Order
+!set o.paid := true
+!create i : Item
+!insert (o, i) into Has
+check NotEmptyWhenPaid
+*Error: Model has no invariant named `NotEmptyWhenPaid'.
+exit

@@ -1,0 +1,13 @@
+!create o : Order
+!set o.paid := true
+!create i : Item
+!insert (o, i) into Has
+constraints -flags Order::AlwaysTrue +d
+check Order::AlwaysTrue
+*Error: Invariant `Order::AlwaysTrue' is deactivated; use check -a to check it.
+check -a Order::AlwaysTrue
+*checking structure...
+*checking invariants...
+*checking invariant (1) `Order::AlwaysTrue': OK.
+*checked 1 invariant, 0 failures.
+exit

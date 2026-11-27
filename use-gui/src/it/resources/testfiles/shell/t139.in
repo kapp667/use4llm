@@ -1,0 +1,10 @@
+!create o : Order
+!set o.paid := true
+!create i : Item
+!insert (o, i) into Has
+check Order::AlwaysTrue Nope
+*Error: Model has no invariant named `Nope'.
+check Nope Order::Nope Order::AlwaysTrue
+*Error: Model has no invariant named `Nope'.
+*Error: Model has no invariant named `Order::Nope'.
+exit

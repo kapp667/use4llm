@@ -1,0 +1,12 @@
+!create o : Order
+!set o.paid := true
+check Order::NotEmptyWhenPaid
+*checking structure...
+*Multiplicity constraint violation in association `Has':
+*  Object `o' of class `Order' is connected to 0 objects of class `Item'
+*  at association end `items' but the multiplicity is specified as `1..*'.
+*checking invariants...
+*checking invariant (1) `Order::NotEmptyWhenPaid': FAILED.
+*  -> false : Boolean
+*checked 1 invariant, 1 failure, 1 structure violation.
+exit
