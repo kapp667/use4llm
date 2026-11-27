@@ -120,3 +120,11 @@ fabric.properties
 
 # Reports written by the ArchUnit cyclic-dependency tests in use-gui
 use-gui/*_results.csv
+
+# Claude Code: ignore everything under .claude/, then allow each shared path by name
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/privacy-guard/
