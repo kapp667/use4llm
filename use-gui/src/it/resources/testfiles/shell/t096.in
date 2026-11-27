@@ -20,7 +20,7 @@ check
 *  at association end `customer'  with the qualifier value [105]
 *  but the multiplicity is specified as `0..1'.
 *checking invariants...
-*checked 0 invariants, 0 failures.
+*checked 0 invariants, 0 failures, 1 structure violation.
 ?b1.customer[105]
 *-> Could not evaluate. expected link set size 1 at association end `customer', found: 2
 !delete (p2, b1{105}) from Account

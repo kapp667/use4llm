@@ -1,0 +1,12 @@
+!create a1 : Whole
+!create a2 : Whole
+!create p : Part
+!insert (a1, p) into Owns
+!insert (a2, p) into Owns
+*Warning: Insert has resulted in two aggregates for object `p'. Object `p' is already component of another object.
+check
+*checking structure...
+*Error: Object `p' is shared by object `a2' and object `a1'.
+*checking invariants...
+*checked 0 invariants, 0 failures, 1 structure violation.
+exit

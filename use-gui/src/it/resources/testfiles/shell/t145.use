@@ -1,0 +1,14 @@
+model Shop
+class Order
+attributes
+  paid : Boolean
+end
+class Item end
+association Has between
+  Order[1] role order
+  Item[1..*] role items
+end
+constraints
+context Order inv NotEmptyWhenPaid: paid implies items->notEmpty()
+context Order inv AlwaysTrue: true
+context Item inv AlwaysTrue: true

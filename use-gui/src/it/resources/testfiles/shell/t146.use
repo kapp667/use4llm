@@ -1,0 +1,7 @@
+model Share
+class Whole end
+class Part end
+composition Owns between
+  Whole[*] role owner
+  Part[*] role parts
+end

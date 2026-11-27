@@ -1,0 +1,16 @@
+!create o : Order
+!set o.paid := true
+!create i : Item
+!insert (o, i) into Has
+check Order::AlwaysTrue Item::AlwaysTrue
+*checking structure...
+*checking invariants...
+*checking invariant (1) `Item::AlwaysTrue': OK.
+*checking invariant (2) `Order::AlwaysTrue': OK.
+*checked 2 invariants, 0 failures.
+check Order::AlwaysTrue Order::AlwaysTrue
+*checking structure...
+*checking invariants...
+*checking invariant (1) `Order::AlwaysTrue': OK.
+*checked 1 invariant, 0 failures.
+exit
