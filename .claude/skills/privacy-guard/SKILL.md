@@ -21,7 +21,7 @@ Judge the meaning, not the shape of a string. A word that looks like a path or a
 ## What is fine
 
 - Code, tests, build files and paths inside the repository.
-- Technical content about USE, OCL, its plugins and their bugs, including exact error messages.
+- Technical content about USE, OCL, Kodkod, the plugins and their bugs, including exact error messages.
 - Issue and pull request numbers, commit hashes and public URLs of this project and its upstream projects.
 - Mentions of tools as tools, such as Claude Code as the editor used, a CI job or a SAT solver.
 - Statements that the work was written with an AI tool, model name included: a `Co-Authored-By: Claude ... <noreply@anthropic.com>` commit trailer, or a footer such as `Generated with Claude Code` that links to the product page. Being open about how the code was written is legitimate. Only a link to a session is private.

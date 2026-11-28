@@ -22,10 +22,7 @@ if [ "$tool" = Bash ]; then
 		base="$(git merge-base HEAD origin/HEAD 2>/dev/null)" ||
 		block "cannot find what this push adds: no upstream and no origin/develop"
 	[ -n "$(git rev-list "$base..HEAD")" ] || exit 0
-	for c in $(git rev-list "$base..HEAD"); do
-		git show -s --format=%B "$c" | grep -qiE 'claude\.ai/code/session_[A-Za-z0-9]+' &&
-			block "commit $(git rev-parse --short "$c") message holds a session link"
-	done
+	"$here/../../ci/hygiene.sh" "$base..HEAD" >&2 || block "ci/hygiene.sh found the problems above in the commits to push"
 	content="$(
 		echo "## Commit messages"
 		git log --format='--- commit %h%n%B' "$base..HEAD"

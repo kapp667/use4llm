@@ -6,6 +6,16 @@ on:
     types: [plugin-published]
   workflow_dispatch:
 jobs:
+  shared:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Check the files shared with use4llm-plugins
+      run: bash ci/check-shared.sh
+    - name: Check commit and file hygiene
+      run: bash ci/hygiene.sh "origin/develop..HEAD"
   build:
     runs-on: ubuntu-latest
     steps:

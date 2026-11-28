@@ -1,0 +1,8 @@
+# Files kapp667/use4llm keeps as exact copies of this repository's version.
+# ci/check-shared.sh reads this list from use4llm-plugins and compares each file.
+ci/shared-files.txt
+ci/check-shared.sh
+ci/hygiene.sh
+.claude/settings.json
+.claude/hooks/privacy-gate.sh
+.claude/skills/privacy-guard/SKILL.md
