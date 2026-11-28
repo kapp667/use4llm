@@ -1558,6 +1558,28 @@ public final class MSystemState {
 	 */
 	public boolean check(PrintWriter out, boolean traceEvaluation,
 			boolean showDetails, boolean allInvariants, final List<String> invNames) {
+		// Named invariants: refuse the whole check before evaluating anything
+		// if a name is unknown, or if it is deactivated and not all are checked.
+		for (String name : invNames) {
+			MClassInvariant named = null;
+			for (MClassInvariant inv : fSystem.model().getClassInvariantsIncludingImports()) {
+				if (inv.qualifiedName().equals(name)) {
+					named = inv;
+					break;
+				}
+			}
+			if (named == null) {
+				out.println("Model has no invariant named `" + name + "'.");
+				out.flush();
+				return false;
+			}
+			if (!allInvariants && !named.isActive()) {
+				out.println("Invariant `" + name + "' is deactivated; use check -a to check it.");
+				out.flush();
+				return false;
+			}
+		}
+
 		boolean valid = true;
 		Evaluator evaluator = new Evaluator();
 

@@ -27,7 +27,7 @@ public class MAssertSingleInvariant extends MAssert {
 		return  ctx.postState().check(new PrintWriter(new NullWriter()), 
 				  false, 
 				  false,
-				  false, invs);
+				  true, invs);
 	}
 
 }

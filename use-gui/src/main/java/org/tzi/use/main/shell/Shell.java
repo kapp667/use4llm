@@ -1639,6 +1639,7 @@ public final class Shell implements Runnable, PPCHandler {
 		}
 
 		Collection<MClassInvariant> invs;
+		boolean unknownName = false;
 
 		if (names.isEmpty()) {
 			invs = system.model().classInvariants();
@@ -1648,9 +1649,8 @@ public final class Shell implements Runnable, PPCHandler {
 			for(String invName : names){
 				MClassInvariant inv = system.model().getClassInvariant(invName);
 				if(inv == null){
-					Log.error("Invariant " + StringUtil.inQuotes(invName) + " does not exist. " +
-							"Ignoring " + StringUtil.inQuotes(invName) + ".");
-					error = true;
+					Log.error("Model has no invariant named " + StringUtil.inQuotes(invName) + ".");
+					unknownName = true;
 					continue;
 				}
 				invs.add(inv);
@@ -1659,6 +1659,9 @@ public final class Shell implements Runnable, PPCHandler {
 
 		if (error){
 			Log.error("syntax is `flags (-all|[invnames]) ((+d|-d) | (+n|-n))'");
+		}
+		else if (unknownName) {
+			// Refused as a whole: no flag is changed.
 		}
 		else if (disabled == null && negated == null){
 			system.generator().printInvariantFlags(invs);
