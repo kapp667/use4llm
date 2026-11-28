@@ -303,4 +303,77 @@ public class ShellIT {
 
         return Stream.empty();
     }
+
+    /**
+     * Runs USE as its own process, as a script or a CI job does, and returns
+     * its exit code. Output is discarded: only the code is observed.
+     *
+     * @param args The command line arguments in front of the model and script files.
+     * @param files The model and script file names, relative to {@code testfiles/exitcode}.
+     */
+    private int exitCodeOfUSE(List<String> args, String... files) throws Exception {
+        URL dirURL = getClass().getClassLoader().getResource("testfiles/exitcode");
+        if (dirURL == null) {
+            fail("Directory for exit code tests not found!");
+        }
+        Path dir = Path.of(dirURL.toURI());
+        String homeDir = dir.resolve("../../../../../use-core/target/classes").toFile().getCanonicalPath();
+
+        List<String> cmd = new java.util.ArrayList<>();
+        cmd.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
+        cmd.add("-cp");
+        cmd.add(System.getProperty("java.class.path"));
+        cmd.add("org.tzi.use.main.gui.Main");
+        cmd.add("-nogui");
+        cmd.add("-nr");
+        cmd.add("-H=" + homeDir);
+        cmd.addAll(args);
+        for (String f : files) {
+            cmd.add(dir.resolve(f).toString());
+        }
+
+        Process p = new ProcessBuilder(cmd)
+                .redirectInput(ProcessBuilder.Redirect.from(new java.io.File("/dev/null")))
+                .redirectErrorStream(true)
+                .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+                .start();
+        if (!p.waitFor(120, java.util.concurrent.TimeUnit.SECONDS)) {
+            p.destroyForcibly();
+            fail("USE did not end: " + cmd);
+        }
+        return p.exitValue();
+    }
+
+    private DynamicTest exitCodeTest(String name, int expected, List<String> args, String... files) {
+        return DynamicTest.dynamicTest(name, () ->
+                org.junit.jupiter.api.Assertions.assertEquals(expected, exitCodeOfUSE(args, files), name));
+    }
+
+    /**
+     * Exit codes of {@code use -q}: 0 = script ran without error and the final check passed,
+     * 1 = script ran without error and the final check failed, 2 = any read or command error
+     * (wins over 0 and 1). Without {@code -q} the exit code is 0 after a normal exit.
+     */
+    @TestFactory
+    public Stream<DynamicTest> exitCodeOfQuietRun() {
+        List<String> q = List.of("-q");
+        return Stream.of(
+                // 1-6: an error during the run gives 2
+                exitCodeTest("refused commands exit 2", 2, q, "m.use", "refused.cmd"),
+                exitCodeTest("missing script file exits 2", 2, q, "m.use", "missing.cmd"),
+                exitCodeTest("nested open of a missing file exits 2", 2, q, "m.use", "qopen.cmd"),
+                exitCodeTest("check of an unknown invariant name exits 2", 2, q, "m.use", "badinv.cmd"),
+                exitCodeTest("refused command beats a failing check", 2, q, "m.use", "refusedviolating.cmd"),
+                exitCodeTest("unknown shell command exits 2", 2, q, "m.use", "unknowncmd.cmd"),
+                // 7: the codes that were right stay
+                exitCodeTest("valid state exits 0", 0, q, "m.use", "ok.cmd"),
+                exitCodeTest("failing invariant exits 1", 1, q, "m.use", "fail.cmd"),
+                exitCodeTest("empty script exits 0", 0, q, "m.use", "empty.cmd"),
+                exitCodeTest("missing model exits 1", 1, q, "missing.use", "ok.cmd"),
+                exitCodeTest("model with a type error exits 1", 1, q, "bad.use", "ok.cmd"),
+                // 9: without -q the exit code is unchanged
+                exitCodeTest("without -q refused commands still exit 0", 0, List.of(), "m.use", "refused.cmd"),
+                exitCodeTest("without -q a failing check still exits 0", 0, List.of(), "m.use", "fail.cmd")
+        );
+    }
 }

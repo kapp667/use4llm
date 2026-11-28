@@ -262,4 +262,81 @@ public class MSystemStateCheckTest extends TestCase {
         assertTrue(shop(1, true).getSystem().state().checkStructure(new PrintWriter(sw)));
         assertFalse(sw.toString(), sw.toString().contains("violation"));
     }
+
+    // ---- issue 15: bad invariant names ----
+
+    private static final String SINGLE =
+            "model M\n" +
+            "class A\n" +
+            "attributes\n" +
+            "  x : Integer\n" +
+            "end\n" +
+            "constraints\n" +
+            "context A inv pos: self.x > 0\n";
+
+    /** Model M with one object a:A with the given x; A::pos is deactivated on request. */
+    private UseSystemApi single(int x, boolean deactivated) throws Exception {
+        UseSystemApi api = system(SINGLE);
+        api.createObject("A", "a");
+        api.setAttributeValue("a", "x", Integer.toString(x));
+        if (deactivated) {
+            api.getSystem().model().getClassInvariant("A::pos").setActive(false);
+        }
+        return api;
+    }
+
+    /** Claim 1: a name that is not in the model is an error, nothing is reported as checked. */
+    public void testUnknownNameIsRefused() throws Exception {
+        String out = check(single(0, false), false, "NoSuch");
+        assertFalse(out, result);
+        assertTrue(out, lines(out).contains("Model has no invariant named `NoSuch'."));
+        assertFalse(out, out.contains("checked 0 invariants"));
+    }
+
+    /** Claim 2: a named deactivated invariant is refused with the message of the shell. */
+    public void testNamedDeactivatedInvariantIsRefused() throws Exception {
+        String out = check(single(0, true), false, "A::pos");
+        assertFalse(out, result);
+        assertTrue(out, lines(out).contains("Invariant `A::pos' is deactivated; use check -a to check it."));
+        assertFalse(out, out.contains("checked 0 invariants"));
+    }
+
+    /** Claim 3: with all = true a named deactivated invariant is checked. */
+    public void testSingleNamedDeactivatedInvariantIsCheckedWithAll() throws Exception {
+        String out = check(single(0, true), true, "A::pos");
+        assertEquals(Collections.singletonList("checking invariant (1) `A::pos': FAILED."), invariantLines(out));
+        assertFalse(out, result);
+
+        out = check(single(1, true), true, "A::pos");
+        assertEquals(Collections.singletonList("checking invariant (1) `A::pos': OK."), invariantLines(out));
+        assertTrue(out, result);
+    }
+
+    /** Claim 4: an empty list means all active invariants; none active means 0 checked, true. */
+    public void testEmptyListChecksActiveInvariantsOnly() throws Exception {
+        String out = check(single(0, true), false);
+        assertTrue(out, result);
+        assertTrue(out, invariantLines(out).isEmpty());
+        assertEquals("checked 0 invariants, 0 failures.", lines(out).get(lines(out).size() - 1));
+
+        out = check(single(0, false), false);
+        assertFalse(out, result);
+        assertEquals(Collections.singletonList("checking invariant (1) `A::pos': FAILED."), invariantLines(out));
+    }
+
+    /** Claim 5: a named active invariant gives the output it always gave. */
+    public void testNamedActiveInvariantOutputUnchanged() throws Exception {
+        String out = check(single(0, false), false, "A::pos");
+        assertEquals("checking structure...\n" +
+                "checking invariants...\n" +
+                "checking invariant (1) `A::pos': FAILED.\n" +
+                "  -> false : Boolean\n" +
+                "checked 1 invariant, 1 failure.\n", out);
+        assertFalse(result);
+
+        out = check(single(1, false), false, "A::pos");
+        assertEquals(Collections.singletonList("checking invariant (1) `A::pos': OK."), invariantLines(out));
+        assertEquals("checked 1 invariant, 0 failures.", lines(out).get(lines(out).size() - 1));
+        assertTrue(result);
+    }
 }
