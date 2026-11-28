@@ -1,0 +1,16 @@
+!create c : C
+!set c.n := 0
+!openter c inc()
+*precondition `notNeg' is true
+!set c.n := 5
+!opexit
+*postcondition `plusOne' is false
+*  self : C = c
+*  self.n : Integer = 5
+*  self : C = c
+*  self.n@pre : Integer = 0
+*  1 : Integer = 1
+*  (self.n@pre + 1) : Integer = 1
+*  (self.n = (self.n@pre + 1)) : Boolean = false
+*Error: postcondition false in operation call `C::inc(self:c)'.
+exit

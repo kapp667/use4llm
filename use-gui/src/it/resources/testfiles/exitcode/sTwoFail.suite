@@ -1,0 +1,13 @@
+testsuite sTwoFail for model invmodel.use
+setup
+  !create c : C
+  !set c.n := 1
+end
+
+testcase first
+  assert invalid invs C, 'expected to fail'
+end
+
+testcase second
+  assert valid invs C, 'C invariants hold'
+end

@@ -1,0 +1,20 @@
+model T162
+
+class C
+attributes
+  n : Integer
+operations
+  inc()
+    pre  notNeg: n >= 0
+    post plusOne: n = n@pre + 1
+  op()
+statemachines
+  psm Life
+    states
+      init : initial
+      zero [n.isUndefined() or n = 0]
+    transitions
+      init -> zero { create }
+      zero -> zero { op() }
+  end
+end

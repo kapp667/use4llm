@@ -1,0 +1,5 @@
+open t154.suite
+*Test suite `sGlobal' with 1 test cases
+*Executing test 1/1 `t'... success
+*### OK ###
+exit

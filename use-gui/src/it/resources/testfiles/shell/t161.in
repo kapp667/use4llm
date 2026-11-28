@@ -1,0 +1,9 @@
+!create c : C
+!set c.n := 0
+!openter c op()
+!set c.n := 5
+!opexit
+*Error: No valid transition after operation call `C::op(self:c)' for protocol state machine `C::Life [self: c, current state: zero]'. Possible transitions:
+*op()/
+*    Target state invariant result: false
+exit

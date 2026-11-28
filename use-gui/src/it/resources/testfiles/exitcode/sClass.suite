@@ -1,0 +1,9 @@
+testsuite sClass for model invmodel.use
+setup
+  !create c : C
+  !set c.n := 1
+end
+
+testcase t
+  assert valid invs C, 'C invariants hold'
+end

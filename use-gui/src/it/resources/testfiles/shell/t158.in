@@ -1,0 +1,10 @@
+open t158.suite
+*Test suite `sTwoFail' with 2 test cases
+*Executing test 1/2 `first'... failure
+*  Line 8: Assertion `expected to fail' failed.
+*Commands to reproduce state:
+*!new C('c')
+*!c.n := 1
+*Executing test 2/2 `second'... success
+*### 1 FAILURE ###
+exit

@@ -1,0 +1,13 @@
+testsuite sGlobalViolated for model t155.use
+setup
+  !create c : C
+  !set c.n := 0
+end
+
+testcase invalidHolds
+  assert invalid invs, 'positive is violated, so invs must not hold'
+end
+
+testcase validFails
+  assert valid invs, 'expected to fail'
+end

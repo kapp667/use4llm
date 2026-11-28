@@ -1,0 +1,13 @@
+testsuite sTwo for model t156.use
+setup
+  !create c : C
+  !set c.n := 1
+end
+
+testcase first
+  assert valid invs, 'all invariants hold'
+end
+
+testcase second
+  assert valid invs C, 'C invariants hold'
+end
