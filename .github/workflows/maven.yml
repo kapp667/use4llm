@@ -1,6 +1,10 @@
 name: Java CI with Maven
-on: 
-  push
+on:
+  push:
+  # Sent by the use4llm-plugins CI after it publishes a new plugin jar.
+  repository_dispatch:
+    types: [plugin-published]
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -59,6 +63,7 @@ jobs:
         notes="Built from ${GITHUB_SHA} on develop."
         if gh release view latest-develop >/dev/null 2>&1; then
           gh release edit latest-develop --notes "$notes"
+          gh api -X PATCH "repos/$GH_REPO/git/refs/tags/latest-develop" -f sha="$GITHUB_SHA" -F force=true >/dev/null
         else
           gh release create latest-develop --prerelease --target "$GITHUB_SHA" --title "Latest develop build" --notes "$notes"
         fi
