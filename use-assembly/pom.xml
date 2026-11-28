@@ -12,6 +12,12 @@
     <packaging>pom</packaging>
     <artifactId>use-assembly</artifactId>
 
+    <properties>
+        <!-- The ModelValidator plugin shipped in lib/plugins: the use4llm-plugins fork build.
+             A file: URL points at a local build instead. -->
+        <use4llm.mv.jar.url>https://github.com/kapp667/use4llm-plugins/releases/download/latest-develop/ModelValidatorPlugin.jar</use4llm.mv.jar.url>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.tzi.use</groupId>
@@ -47,6 +53,30 @@
                         <goals>
                             <goal>add-third-party</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Fetches the use4llm-plugins fork of the ModelValidator plugin into target/plugins. -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>fetch-model-validator</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${project.build.directory}/plugins"/>
+                                <get src="${use4llm.mv.jar.url}"
+                                     dest="${project.build.directory}/plugins/ModelValidatorPlugin.jar"
+                                     usetimestamp="false"
+                                     retries="2"/>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
