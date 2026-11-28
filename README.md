@@ -1,3 +1,39 @@
+# use4llm
+
+USE, the UML-based Specification Environment, for LLM agents and CI.
+
+An LLM agent writes a UML/OCL model: classes, associations, invariants, pre- and postconditions, and object diagrams. USE checks it. The verdict goes back to the agent, which fixes its model, and to the CI, which blocks a change when the model and the code disagree. Nobody reads the verdict before a machine acts on it, so it must be exact, or an explicit error. A silent "ok" is never acceptable.
+
+use4llm is still a complete, general-purpose USE. LLM agents are the users it is tuned for, not the only ones.
+
+## Why a fork
+
+In several places, USE reported success when the model or the state was wrong. A person at the prompt notices that. A pipeline does not. This fork fixes those cases one at a time, each with a test that fails first. Java packages, jar names and Maven modules keep their upstream names, so that each fix can still be proposed upstream.
+
+## What this fork changes
+
+- `use -q` exits with 2 on a missing file, a refused command or an empty state, instead of 0 ([#12](https://github.com/kapp667/use4llm/issues/12)).
+- Under `-q`, a test suite that does not pass exits with 2: a failed test, a test that ends in error, a setup error, or a suite that does not compile ([#20](https://github.com/kapp667/use4llm/pull/20)).
+- `assert valid invs` and `assert invalid invs` in a test suite no longer throw a NullPointerException ([#2](https://github.com/kapp667/use4llm/issues/2)).
+- `check` refuses an unknown or deactivated invariant name. A qualified name used to check no invariant and report 0 failures ([#10](https://github.com/kapp667/use4llm/issues/10), [#15](https://github.com/kapp667/use4llm/issues/15)).
+- The `check` summary counts multiplicity violations ([#11](https://github.com/kapp667/use4llm/issues/11)).
+- A `!opexit` whose postcondition is false keeps the operation on the call stack ([#6](https://github.com/kapp667/use4llm/issues/6)).
+- A copied system state computes its derived values from its own data, not from the source state's ([#1](https://github.com/kapp667/use4llm/issues/1)).
+- The distribution ships the ModelValidator plugin built from [use4llm-plugins](https://github.com/kapp667/use4llm-plugins) instead of the prebuilt upstream jar, and the build checks it ([#9](https://github.com/kapp667/use4llm/issues/9)). Each new plugin build triggers a new build of the distribution ([#21](https://github.com/kapp667/use4llm/pull/21)).
+- The `net` command listens on the loopback address only.
+
+The [open issues](https://github.com/kapp667/use4llm/issues) list what is left. For example, `!opexit` on a postcondition that fails to evaluate still exits the operation ([#18](https://github.com/kapp667/use4llm/issues/18)).
+
+## Builds
+
+Each green build of the `develop` branch is published as a zip in the [latest-develop](https://github.com/kapp667/use4llm/releases/tag/latest-develop) release. The release notes name the commit it was built from. The `develop` branch regularly merges the `main` branch of useocl/use.
+
+## Credits
+
+USE is developed by the University of Bremen and the University of Applied Sciences Hamburg. This fork builds on their work. Their README follows.
+
+---
+
 # USE - UML-based Specification Environment
 
 (Note that this is a release of a research prototype. There is no
