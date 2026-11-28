@@ -1,0 +1,5 @@
+model OpExitNoResult
+class C
+operations
+  op() : String
+end

@@ -1,0 +1,20 @@
+!create c : C
+!openter c op()
+!opexit 42
+*Error: Result value type `Integer' does not match operation result type `String'.
+info opstack
+*1. C::op(self:c) [caller: openter c op()@<input>:1:0]
+!opexit 'bad'
+*postcondition `p' is false
+*  result : String = 'bad'
+*  'ok' : String = 'ok'
+*  (result = 'ok') : Boolean = false
+*Error: postcondition false in operation call `C::op(self:c)'.
+info opstack
+*no active operations.
+!openter c op()
+!opexit 'ok'
+*postcondition `p' is true
+info opstack
+*no active operations.
+exit

@@ -1,0 +1,6 @@
+model OpExitWrongResult
+class C
+operations
+  op() : String
+    post p: result = 'ok'
+end

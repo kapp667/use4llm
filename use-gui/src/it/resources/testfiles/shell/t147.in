@@ -1,0 +1,12 @@
+!create c : C
+!openter c op()
+info opstack
+*1. C::op(self:c) [caller: openter c op()@<input>:1:0]
+!opexit
+*Error: Result value of type `String' required on exit of operation `C::op'.
+info opstack
+*1. C::op(self:c) [caller: openter c op()@<input>:1:0]
+!opexit 'x'
+info opstack
+*no active operations.
+exit
