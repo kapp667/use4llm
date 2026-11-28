@@ -1323,6 +1323,9 @@ public final class Shell implements Runnable, PPCHandler {
 			Log.println(testSuite.getStats());
 			// create system
 			testSuite.run(output);
+		} else {
+			// the compiler printed the reason, or the file could not be read
+			Log.markError();
 		}
 
 		setFileClosed();

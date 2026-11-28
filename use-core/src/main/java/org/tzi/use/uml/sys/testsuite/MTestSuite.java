@@ -16,6 +16,7 @@ import org.tzi.use.uml.sys.ppcHandling.PPCHandler;
 import org.tzi.use.uml.sys.ppcHandling.PostConditionCheckFailedException;
 import org.tzi.use.uml.sys.ppcHandling.PreConditionCheckFailedException;
 import org.tzi.use.uml.sys.soil.MStatement;
+import org.tzi.use.util.Log;
 import org.tzi.use.util.NullWriter;
 import org.tzi.use.util.soil.exceptions.CompilationFailedException;
 
@@ -56,6 +57,8 @@ public class MTestSuite {
 			} catch (Exception e) {
 				System.err.println("Error during test setup:");
 				System.err.println(e.getMessage());
+				Log.markError();
+				reportln("### ERROR ###");
 				return;
 			}
 			
@@ -70,14 +73,20 @@ public class MTestSuite {
 					reportln("... failure");
 					reportln("  " + test.getFailureDetails());
 					failedTests++;
+					Log.markError();
 				} else if (result == TestResult.ERROR) {
 					reportln("... error");
 					reportln("  " + test.getFailureDetails());
+					Log.markError();
+					reportln("### ERROR ###");
 					return;
 				}
 			} catch (Exception e) {
 				System.err.println("... error");
 				System.err.println("  " + e.getMessage());
+				Log.markError();
+				reportln("... error");
+				reportln("### ERROR ###");
 				return;
 			}
 			
