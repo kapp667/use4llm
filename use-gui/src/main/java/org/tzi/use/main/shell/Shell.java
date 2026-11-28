@@ -194,7 +194,10 @@ public final class Shell implements Runnable, PPCHandler {
 			String line = "";
 
 			if(Options.quiet && !fReadlineStack.hasReadline()){
-				return;
+				// nothing to run (e.g. the script could not be opened): still
+				// check and exit with the code of the run
+				processLineSafely("check");
+				break;
 			}
 			// get current readline (may be e.g. console or file)
 			fReadline = fReadlineStack.getCurrentReadline();
@@ -299,6 +302,7 @@ public final class Shell implements Runnable, PPCHandler {
 		} catch (NoSystemException ex) {
 			Log.error("No System available. Please load a model before executing this command.");
 		} catch (Exception ex) {
+			Log.markError();
 			System.err.println();
 			String nl = Options.LINE_SEPARATOR;
 			System.err
@@ -631,6 +635,8 @@ public final class Shell implements Runnable, PPCHandler {
 				verbose);
 
 		if (statement == null) {
+			// the compiler has already printed the reason
+			Log.markError();
 			return;
 		}
 
@@ -683,9 +689,15 @@ public final class Shell implements Runnable, PPCHandler {
 
 		synchronized( fReadlineStack ) {
 			fFinished = true;
+			// -q exit codes: 2 if any error happened during the run, else 1 if
+			// the final check failed, else 0
 			int exitCode = 0;
-			if (Options.quiet && ! lastCheckResult() ) {
-				exitCode = 1;
+			if (Options.quiet) {
+				if (Log.isErrorReported()) {
+					exitCode = 2;
+				} else if (!lastCheckResult()) {
+					exitCode = 1;
+				}
 			}
 
 			if (!Options.integrationTestMode) {
@@ -1274,6 +1286,9 @@ public final class Shell implements Runnable, PPCHandler {
 
 			// create system
 			fSession.setSystem(new MSystem(model));
+		} else {
+			// the compiler has already printed the reason, or the read failed
+			Log.markError();
 		}
 
 		setFileClosed();
@@ -1755,8 +1770,10 @@ public final class Shell implements Runnable, PPCHandler {
 		} catch (FileNotFoundException e) {
 			// ignored
 			Log.println("Error: File `" + filename + "' could not be found!");
+			Log.markError();
 			return "ERROR: -1";
 		} catch (IOException e) {
+			Log.markError();
 			// ignored
 		}
 		return null;
