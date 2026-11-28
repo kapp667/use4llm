@@ -1,0 +1,5 @@
+does not match operation result type `Integer'
+1. A::calc(
+postcondition `pos' is false
+postcondition `pos' is true
+no active operations.

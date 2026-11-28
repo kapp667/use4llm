@@ -1,0 +1,7 @@
+model Calc
+
+class A
+operations
+  calc(x : Integer) : Integer
+    post pos: result > 0
+end

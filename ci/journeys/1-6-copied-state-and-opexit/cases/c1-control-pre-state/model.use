@@ -1,0 +1,13 @@
+model Pre2
+
+class C
+attributes
+  n : Integer
+  d : Integer derive = self.n * 3
+operations
+  inc()
+    begin
+      self.n := self.n + 1
+    end
+    post: self.d@pre = 6 and self.d = 9
+end

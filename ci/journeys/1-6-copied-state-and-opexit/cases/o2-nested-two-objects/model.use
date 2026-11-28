@@ -1,0 +1,6 @@
+model Two
+
+class T
+operations
+  name() : String
+end
