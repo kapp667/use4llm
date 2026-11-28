@@ -1,0 +1,9 @@
+testsuite sBadExpr for model invmodel.use
+setup
+  !create c : C
+  !set c.n := 1
+end
+
+testcase t
+  assert valid c.nosuch = 1, 'bad expr'
+end

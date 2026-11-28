@@ -1,0 +1,9 @@
+testsuite sGlobal for model t154.use
+setup
+  !create c : C
+  !set c.n := 1
+end
+
+testcase t
+  assert valid invs, 'all invariants hold'
+end

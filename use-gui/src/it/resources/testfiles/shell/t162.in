@@ -1,0 +1,6 @@
+!create c : C
+!set c.n := -1
+!openter c inc()
+*precondition `notNeg' is false
+*Error: precondition false in operation call `C::inc(self:c)'.
+exit

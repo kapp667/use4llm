@@ -371,6 +371,23 @@ public class ShellIT {
                 exitCodeTest("empty script exits 0", 0, q, "m.use", "empty.cmd"),
                 exitCodeTest("missing model exits 1", 1, q, "missing.use", "ok.cmd"),
                 exitCodeTest("model with a type error exits 1", 1, q, "bad.use", "ok.cmd"),
+                // a test suite that did not pass gives 2, whatever the state of the shell is
+                exitCodeTest("suite with an assert on all invariants exits 0", 0, q, "invmodel.use", "sGlobal.cmd"),
+                exitCodeTest("suite with a failed global assert exits 2", 2, q, "invmodel.use", "sGlobalViolated.cmd"),
+                exitCodeTest("suite with two passing tests exits 0", 0, q, "invmodel.use", "sTwo.cmd"),
+                exitCodeTest("suite with a failed test exits 2", 2, q, "invmodel.use", "sFail.cmd"),
+                exitCodeTest("suite with a failed and a passing test exits 2", 2, q, "invmodel.use", "sTwoFail.cmd"),
+                exitCodeTest("suite with a test that ends in error exits 2", 2, q, "invmodel.use", "sBadExpr.cmd"),
+                exitCodeTest("suite with a setup error exits 2", 2, q, "invmodel.use", "sSetup.cmd"),
+                exitCodeTest("suite that does not compile exits 2", 2, q, "invmodel.use", "sParse.cmd"),
+                exitCodeTest("suite with a passing class assert exits 0", 0, q, "invmodel.use", "sClass.cmd"),
+                exitCodeTest("open of a missing suite exits 2", 2, q, "invmodel.use", "sMissing.cmd"),
+                exitCodeTest("false postcondition of opexit exits 2", 2, q, "opmodel.use", "post.cmd"),
+                exitCodeTest("no valid transition after opexit exits 2", 2, q, "opmodel.use", "trans.cmd"),
+                exitCodeTest("false precondition of openter exits 2", 2, q, "opmodel.use", "pre.cmd"),
+                exitCodeTest("valid operation call exits 0", 0, q, "opmodel.use", "opok.cmd"),
+                exitCodeTest("failing check without a suite exits 1", 1, q, "invmodel.use", "checkfail.cmd"),
+                exitCodeTest("without -q a failed suite still exits 0", 0, List.of(), "invmodel.use", "sFail.cmd"),
                 // 9: without -q the exit code is unchanged
                 exitCodeTest("without -q refused commands still exit 0", 0, List.of(), "m.use", "refused.cmd"),
                 exitCodeTest("without -q a failing check still exits 0", 0, List.of(), "m.use", "fail.cmd")

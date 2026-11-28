@@ -1,0 +1,8 @@
+model InvModel
+
+class C
+attributes
+  n : Integer
+constraints
+  inv positive: n > 0
+end

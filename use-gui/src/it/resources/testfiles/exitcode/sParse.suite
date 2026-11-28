@@ -1,0 +1,7 @@
+testsuite sParse for model invmodel.use
+setup
+  !create c : C
+end
+testcase t
+  assert bogus
+end

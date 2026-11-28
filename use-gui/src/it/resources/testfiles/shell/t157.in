@@ -1,0 +1,9 @@
+open t157.suite
+*Test suite `sFail' with 1 test cases
+*Executing test 1/1 `t'... failure
+*  Line 8: Assertion `expected to fail' failed.
+*Commands to reproduce state:
+*!new C('c')
+*!c.n := 1
+*### 1 FAILURE ###
+exit

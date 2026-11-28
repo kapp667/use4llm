@@ -1,0 +1,6 @@
+open t156.suite
+*Test suite `sTwo' with 2 test cases
+*Executing test 1/2 `first'... success
+*Executing test 2/2 `second'... success
+*### OK ###
+exit

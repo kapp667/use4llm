@@ -1,0 +1,10 @@
+open t155.suite
+*Test suite `sGlobalViolated' with 2 test cases
+*Executing test 1/2 `invalidHolds'... success
+*Executing test 2/2 `validFails'... failure
+*  Line 12: Assertion `expected to fail' failed.
+*Commands to reproduce state:
+*!new C('c')
+*!c.n := 0
+*### 1 FAILURE ###
+exit
