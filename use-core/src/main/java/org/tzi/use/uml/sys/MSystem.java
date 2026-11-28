@@ -659,8 +659,9 @@ public final class MSystem {
 			return operationCall;
 		}
 
+		assertResultValueValid(resultValue, operationCall.getOperation());
+
 		try {
-			assertResultValueValid(resultValue, operationCall.getOperation());
 			if (resultValue != null)
 				operationCall.setResultValue(resultValue);
 

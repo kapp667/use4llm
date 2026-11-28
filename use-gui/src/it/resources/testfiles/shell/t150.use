@@ -1,0 +1,5 @@
+model OpExitNested
+class C
+operations
+  op() : String
+end

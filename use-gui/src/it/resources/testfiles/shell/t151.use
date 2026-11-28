@@ -1,0 +1,7 @@
+model M
+class A
+attributes
+  x : Integer
+end
+constraints
+context A inv pos: self.x > 0

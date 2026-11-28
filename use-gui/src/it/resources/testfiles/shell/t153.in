@@ -1,0 +1,10 @@
+!create a : A
+!set a.x := 0
+constraints -flags A::pos +d +d
+*Error: syntax is `flags (-all|[invnames]) ((+d|-d) | (+n|-n))'
+constraints -flags
+*- disabled class invariants:
+*(none)
+*- enabled class invariants:
+*A::pos
+exit

@@ -1,0 +1,5 @@
+model M
+class A
+attributes
+  x : Intger
+end

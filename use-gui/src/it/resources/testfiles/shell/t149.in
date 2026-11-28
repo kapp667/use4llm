@@ -1,0 +1,11 @@
+!create c : C
+!openter c op()
+!opexit 'bad'
+*postcondition `p' is false
+*  result : String = 'bad'
+*  'ok' : String = 'ok'
+*  (result = 'ok') : Boolean = false
+*Error: postcondition false in operation call `C::op(self:c)'.
+info opstack
+*no active operations.
+exit
