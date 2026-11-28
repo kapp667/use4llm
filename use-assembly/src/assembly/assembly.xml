@@ -83,6 +83,14 @@
             </includes>
         </fileSet>
         <fileSet>
+            <!-- The ModelValidator plugin, fetched by maven-antrun-plugin in prepare-package -->
+            <directory>${project.build.directory}/plugins</directory>
+            <outputDirectory>lib/plugins</outputDirectory>
+            <includes>
+                <include>ModelValidatorPlugin.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <!-- javafx sdk that should be shipped with the USE archive is located here -->
             <directory>${project.basedir}/../use-gui/lib/javafx-sdk-21.0.5</directory>
             <outputDirectory>lib/javafx-sdk-21.0.5</outputDirectory>
