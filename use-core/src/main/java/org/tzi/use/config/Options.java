@@ -247,7 +247,7 @@ public class Options {
         System.out.println("  -H=path       home of use installation");
 		System.out.println("  -nr           suppress warnings about missing readline library");
 		System.out.println("  -q            reads spec_file, executes cmd_file, and checks constraints");
-		System.out.println("                exit code is 1 if constraints fail, otherwise 0");
+		System.out.println("                exit code is 2 if an error occurred, else 1 if constraints fail, else 0");
 		System.out.println("  -qv           like -q but with verbose output of constraint check");
         System.out.println("  -v            print verbose messages");
 		System.out.println("  -vt           print verbose messages with time info");

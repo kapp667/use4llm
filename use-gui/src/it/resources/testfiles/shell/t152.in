@@ -1,0 +1,8 @@
+!create a : A
+!set a.x := 0
+constraints -flags A::pos +d
+check
+*checking structure...
+*checking invariants...
+*checked 0 invariants, 0 failures.
+exit

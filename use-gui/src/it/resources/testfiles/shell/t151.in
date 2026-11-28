@@ -1,0 +1,10 @@
+!create a : A
+!set a.x := 0
+constraints -flags A::pos NoSuch +d
+*Error: Model has no invariant named `NoSuch'.
+constraints -flags
+*- disabled class invariants:
+*(none)
+*- enabled class invariants:
+*A::pos
+exit

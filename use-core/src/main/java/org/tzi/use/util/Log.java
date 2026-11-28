@@ -41,6 +41,7 @@ public final class Log {
     private static boolean fTrace = false;
     private static boolean fPrintStackTraces = true;
     private static boolean fDidOutput = false;
+    private static boolean fErrorReported = false;
     private static boolean showWarnings = true;
     private static boolean fDebug = false;
     
@@ -191,38 +192,58 @@ public final class Log {
     public static synchronized void error(String s) {
         fErr.println("Error: " + s);
         fDidOutput = true;
+        fErrorReported = true;
     }
 
     public static synchronized void error(Object location, String msg) {
         String className = location.getClass().getName();
         String err = "error in " + className + ": " + msg;
-        
+
         fErr.println(err);
+        fErrorReported = true;
     }
 
     public static synchronized void error(Exception e) {
         String className = e.getClass().getName();
         String err = "exception " + className + ": " + e.getMessage();
-        
+
         fErr.println(err);
-        
+
         if (fPrintStackTraces ) {
             e.printStackTrace();
         }
         fDidOutput = true;
+        fErrorReported = true;
     }
 
     public static synchronized void error(String s, Exception e) {
         String className = e.getClass().getName();
         String err = "exception " + className + ": " + s + " reason: " + e.getMessage();
-        
+
         fErr.println(err);
-        
+
         if ( fPrintStackTraces ) {
             e.printStackTrace();
         }
-        
+
         fDidOutput = true;
+        fErrorReported = true;
+    }
+
+    /**
+     * Records that an error happened without printing anything, for errors
+     * that were already written to the error stream by another component.
+     */
+    public static synchronized void markError() {
+        fErrorReported = true;
+    }
+
+    /**
+     * Returns {@code true} if {@link #error} or {@link #markError} was called
+     * since the program started. Warnings do not count.
+     */
+    public static synchronized boolean isErrorReported() {
+        return fErrorReported;
     }
 
 	public static synchronized void warn(String string) {
