@@ -19,6 +19,8 @@ jobs:
         end_time=$(date +%s)
         build_time=$((end_time - start_time))
         echo "BUILD_TIME_SECONDS=$build_time" >> build_output.log
+    - name: Check the plugins in the zip
+      run: bash use-assembly/check-plugins.sh use-assembly/target/use-*-use-bin.zip
     - name: Upload build result
       run: mkdir staging && cp use-assembly/target/*.zip staging
     - uses: actions/upload-artifact@v4
