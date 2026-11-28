@@ -153,9 +153,9 @@ public final class MSystemState {
 		
 		synchronized (dirtyLock) {
 			derivedValuesController = new DerivedValueController[3];
-			derivedValuesController[0] = new DerivedLinkControllerDerivedEnd(this, x.fLinkSets, (DerivedLinkController)x.derivedValuesController[0]);
-			derivedValuesController[1] = new DerivedLinkControllerUnion(this, x.fLinkSets, (DerivedLinkController)x.derivedValuesController[1]);
-			derivedValuesController[2] = new DerivedAttributeController(this, x.fObjectStates, (DerivedAttributeController)x.derivedValuesController[2]);
+			derivedValuesController[0] = new DerivedLinkControllerDerivedEnd(this, fLinkSets, (DerivedLinkController)x.derivedValuesController[0]);
+			derivedValuesController[1] = new DerivedLinkControllerUnion(this, fLinkSets, (DerivedLinkController)x.derivedValuesController[1]);
+			derivedValuesController[2] = new DerivedAttributeController(this, fObjectStates, (DerivedAttributeController)x.derivedValuesController[2]);
 		}
 	}
 
