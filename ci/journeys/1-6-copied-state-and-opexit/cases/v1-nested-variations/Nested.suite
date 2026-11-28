@@ -1,0 +1,22 @@
+testsuite Nested for model Nested.use
+setup
+  !create a : P
+  !set a.n := 1
+end
+
+testcase nestedChecks
+  beginVariation
+  !create b : P
+  !set b.n := 10
+  assert valid invs P, 'outer variation'
+  beginVariation
+  !create e : P
+  !set e.n := 20
+  assert valid invs P, 'inner variation'
+  endVariation
+  endVariation
+end
+
+testcase sourceStillSeesItsValue
+  assert valid a.d = 2, 'a.d derives from a.n = 1'
+end

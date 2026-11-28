@@ -1,0 +1,7 @@
+model Nested
+
+class P
+attributes
+  n : Integer
+  d : Integer derive = self.n + 1
+end
